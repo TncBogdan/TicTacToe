@@ -1,13 +1,14 @@
 package com.tnc;
 
 public class Player {
-    String player1;
-    String player2;
-    String symbol;
+    String name;
 
-    public Player(String player1, String player2, String symbol) {
-        this.player1 = player1;
-        this.player2 = player2;
+    char symbol;
+
+    public Player(String name, char symbol) {
+        this.name = name;
         this.symbol = symbol;
     }
 }
+
+
