@@ -1,5 +1,7 @@
 package com.tnc;
 
+import java.util.Scanner;
+
 public class TncTacToe {
 
     static char SYMBOL_X = 'X';
@@ -34,5 +36,53 @@ public class TncTacToe {
             }
             System.out.println("\n");
         }
+    }
+
+    public int readPlayer(Player player) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Jucatorul " + player.name + " muta");
+        return scanner.nextInt();
+    }
+
+    public void makeMove(Player player, int move) {
+        int i = (move - 1) / size;
+        int j = (move - 1) % size;
+        board[i][j] = player.symbol;
+    }
+
+    public boolean isWinLine(Player player, int line) {
+        boolean win = true;
+        int i = 0;
+        while (i < size && win) {
+            if (board[line][i] != player.symbol) {
+                win = false;
+            }
+            i++;
+        }
+        return win;
+    }
+
+    public boolean isWinCol(Player player, int col) {
+        boolean win = true;
+        int i = 0;
+        while (i < size && win) {
+            if (board[col][i] != player.symbol) {
+                win = false;
+            }
+            i++;
+        }
+        return win;
+    }
+
+    public boolean winDiag1(Player player) {
+        boolean win = true;
+        int i = 0;
+        while (i < size && win) {
+            if (board[i][i] != player.symbol) {
+                return false;
+            }
+            i++;
+        }
+        return win;
     }
 }
