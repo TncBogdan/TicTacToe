@@ -6,12 +6,11 @@ public class TncTacToe {
 
     static char SYMBOL_X = 'X';
     static char SYMBOL_0 = '0';
-    static char[] SYMBOL = new char[]{SYMBOL_X, SYMBOL_0};
 
     Player player1;
     Player player2;
-    char[][] board;
-    int size;
+    private char[][] board;
+    private int size;
 
     public TncTacToe(int size, String player1, String player2) {
         this.player1 = new Player(player1, SYMBOL_X);
@@ -32,9 +31,9 @@ public class TncTacToe {
     public void showBoard() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                System.out.print(board[i][j] + "    ");
+                System.out.print(board[i][j] + "  |  ");
             }
-            System.out.println("\n");
+            System.out.println("\n" + "....................");
         }
     }
 
@@ -50,39 +49,79 @@ public class TncTacToe {
         board[i][j] = player.symbol;
     }
 
-    public boolean isWinLine(Player player, int line) {
-        boolean win = true;
-        int i = 0;
-        while (i < size && win) {
-            if (board[line][i] != player.symbol) {
-                win = false;
-            }
-            i++;
-        }
-        return win;
+    public boolean checkRowCol(char c1, char c2, char c3) {
+        return ((c1 != '-') && (c1 == c2) && (c2 == c3));
     }
 
-    public boolean isWinCol(Player player, int col) {
-        boolean win = true;
-        int i = 0;
-        while (i < size && win) {
-            if (board[col][i] != player.symbol) {
-                win = false;
+    public boolean isWinLine() {
+        for (int i = 0; i < 3; i++) {
+            if (checkRowCol(board[i][0], board[i][1], board[i][2])) {
+                return true;
             }
-            i++;
         }
-        return win;
+        return false;
     }
 
-    public boolean winDiag1(Player player) {
-        boolean win = true;
-        int i = 0;
-        while (i < size && win) {
-            if (board[i][i] != player.symbol) {
-                return false;
+    public boolean isWinCol() {
+        for (int i = 0; i < 3; i++) {
+            if (checkRowCol(board[0][i], board[1][i], board[2][i])) {
+                return true;
             }
-            i++;
         }
-        return win;
+        return false;
+    }
+
+    public boolean isWinDiag1() {
+        for (int i = 0; i < 3; i++) {
+            if (checkRowCol(board[i][0], board[1][1], board[2][2])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isWinDiag2() {
+        for (int i = 0; i < 3; i++) {
+            if (checkRowCol(board[i][2], board[1][1], board[i][2])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isWin() {
+        return isWinLine() || isWinCol() || isWinDiag1() || isWinDiag2();
+    }
+
+    public void playGame() {
+
+        int nrMoves = 0;
+        Player currentPlayer = player1;
+        boolean win = false;
+        while (nrMoves < (size * size) && !win) {
+
+            int move = readPlayer(currentPlayer);
+            makeMove(currentPlayer, move);
+            nrMoves++;
+
+            showBoard();
+            //nu testeaza primele 4 mutari in 3 * 3
+            if (nrMoves >= 2 * size - 1) {
+                win = isWin();
+            }
+            if (!win) {
+                //schimb jucatorii
+                if (currentPlayer == player1) {
+                    currentPlayer = player2;
+                } else {
+                    currentPlayer = player1;
+                }
+            }
+        }
+        if (!win) {
+            System.out.println("remiza");
+        } else {
+            System.out.println("castigator: " + currentPlayer.name);
+        }
     }
 }
